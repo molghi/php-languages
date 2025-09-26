@@ -6,6 +6,16 @@
 
     $form_data = isset($_SESSION['form_data']) ? $_SESSION['form_data'] : null;
 
+    $user_id = 1;
+
+    if (isset($_REQUEST['action']) && $_REQUEST['action'] === 'edit') {
+        $mode = 'edit';
+        require_once('../includes/Database.php');
+        $db = new Database;
+        $word_id = $_REQUEST['wordid'];
+        $word_to_edit = $db->get_user_word($user_id, $word_id);
+    }
+
     $page = 'form';
 
     // passing things to header.php

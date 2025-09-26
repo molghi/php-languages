@@ -1,7 +1,9 @@
-<div class="max-w-6xl mx-auto pb-[100px]">
+<div class="max-w-6xl mx-auto pb-[100px] px-3">
+
+    <h2 class="text-[#458B41] text-center font-mono my-6 text-4xl">Your Vocabulary</h2>
 
     <!-- Filter row -->
-    <div class="w-full bg-black text-[#458B41] font-mono border-b-2 border-[#458B41] p-3 flex items-center gap-4 mt-4 pb-8">
+    <div class="w-full bg-black text-[#458B41] font-mono border-b-2 border-[#458B41] py-3 flex items-center gap-4 mt-4 pb-8">
         <form action="../public/index.php?action=filter" method="POST" class="flex items-center gap-4">
             <label for="lang" class="uppercase text-md">Language:</label>
             <select name="language" id="lang" class="bg-black text-[#458B41] border border-[#458B41] px-2 py-1 focus:outline-none">
@@ -54,16 +56,16 @@
 
 
     <!-- Word entries list -->
-    <div class="divide-y divide-green-600 border-l-2 border-r-2 border-b-2 border-[#458B41] bg-black text-green-300 font-mono">
+    <div class="divide-y divide-green-600 border-l-2 border-r-2 border-b-2 border-[#458B41] bg-black text-green-300 font-mono entries">
     <!-- Entries -->
         <?php if ($user_words && count($user_words) > 0): ?>
             <?php foreach($user_words as $entry): ?>
-                <div class="p-4 hover:bg-green-950/40 flex justify-between" data-word-id="<?= $entry['id'] ?>">
+                <div class="p-4 hover:bg-green-950/40 flex justify-between entry" data-word-id="<?= $entry['id'] ?>">
                     <div>
                         <!-- WORD -->
                         <div class="flex gap-4 items-center mb-2">
                             <span class="font-bold text-[#458B41]">Word/Phrase:</span>
-                            <span class="text-xl"><?= $entry['word'] ?></span>
+                            <span class="text-xl entry-word"><?= $entry['word'] ?></span>
                         </div>
                         <!-- TRANSLATION -->
                         <div class="flex gap-4 items-center">
@@ -71,32 +73,52 @@
                             <span><?= $entry['translation'] ?></span>
                         </div>
                         <!-- LANG & CAT -->
-                        <div class="flex gap-6 mt-2 text-sm">
-                            <span><span class="text-[#458B41]">Language:</span> <?= $languages[$entry['language']] ?></span>
-                            <span><span class="text-[#458B41]">Category:</span> <?= $categories[$entry['category']] ?></span>
+                        <div class="flex gap-8 mt-2 text-sm">
+                            <div>
+                                <span class="text-[#458B41]">Language:</span> 
+                                <span class="entry-lang"><?= $languages[$entry['language']] ?></span>
+                            </div>
+
+                            <div>
+                                <span class="text-[#458B41]">Category:</span> 
+                                <span><?= $categories[$entry['category']] ?></span>
+                            </div>
+
+                            <div>
+                                <span class="text-[#458B41]">Strength:</span> 
+                                <?php
+                                    if ($entry['strength'] === 0) $color = 'text-[white]';
+                                    if ($entry['strength'] === 1) $color = 'text-red-400';
+                                    if ($entry['strength'] === 2) $color = 'text-yellow-400';
+                                    if ($entry['strength'] === 3) $color = 'text-green-400';
+                                    if ($entry['strength'] === 4) $color = 'text-blue-400';
+                                ?>
+                                <span class="<?= $color; ?>"
+                                ><?= $strengths[$entry['strength']] ?></span>
+                            </div>
                         </div>
                         <!-- EXAMPLE -->
                         <?php if ($entry['example']): ?>
                             <div class="mt-2">
                                 <span class="font-bold text-[#458B41]">Example:</span>
-                                <p class="ml-2">Bonjour, comment ça va ?</p>
+                                <p class="ml-2"><?= $entry['example'] ?></p>
                             </div>
                         <?php endif; ?>
                         <!--  -->
                         <?php if ($entry['notes']): ?>
                         <div class="mt-2">
                             <span class="font-bold text-[#458B41]">Notes:</span>
-                            <p class="ml-2">Common greeting.</p>
+                            <p class="ml-2"><?= $entry['notes'] ?></p>
                         </div>
                         <?php endif; ?>
                     </div>  
                     <div>
                         <!-- Action buttons -->
                         <div class="flex gap-4">
-                        <button class="flex items-center gap-1 bg-black border border-green-400 text-green-400 px-2 py-1 text-sm uppercase opacity-50 hover:opacity-100 active:opacity-70">
+                        <button class="flex items-center gap-1 bg-black border border-green-400 text-green-400 px-2 py-1 text-sm uppercase opacity-50 hover:opacity-100 active:opacity-70 edit-entry">
                             <i class="fas fa-edit"></i> Edit
                         </button>
-                        <button class="flex items-center gap-1 bg-black border border-red-500 text-red-500 px-2 py-1 text-sm uppercase opacity-50 hover:opacity-100 active:opacity-70">
+                        <button class="flex items-center gap-1 bg-black border border-red-500 text-red-500 px-2 py-1 text-sm uppercase opacity-50 hover:opacity-100 active:opacity-70 delete-entry">
                             <i class="fas fa-trash-alt"></i> Delete
                         </button>
                         </div>

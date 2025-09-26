@@ -2,13 +2,15 @@
 
     require_once('../includes/init.php');
 
+    $quiz_page = './quiz.php';
+
     $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : null; 
 
-    require_once('../controllers/FormController.php'); // for Add/Edit Word form
+    require_once('../controllers/WordController.php'); // for Add/Edit Word form
     require_once('../controllers/FilterController.php'); // for Vocabulary Filter
     require_once('../includes/Validator.php');
     require_once('../includes/Database.php');
-    $form = new FormController;
+    $word = new WordController;
     $val = new Validator;
     $db = new Database;
     $filter = new FilterController;
@@ -17,10 +19,29 @@
 
     switch ($action) {
         case 'addword':
-            $form->add_word();
+            $word->add_word();
             break;
         case 'filter':
             $filter->filter($user_id);
+            break;
+        case 'deleteword':
+            $word_id = $_REQUEST['wordid'];
+            $word->delete_word($user_id, $word_id);
+            break;
+        case 'editword':
+            $word_id = $_REQUEST['wordid'];
+            $word->edit_word($user_id, $word_id);
+            break;
+        case 'startquiz':
+            $lang = $_POST['language'];
+            $cat = $_POST['category'];
+            $word->get_word_set($user_id, $lang, $cat);
+            break;
+        case 'quiznextround':
+            $word->next_round();
+            break;
+        case 'registerquiz':
+            $word->register_quiz($user_id);
             break;
         default:
             break;

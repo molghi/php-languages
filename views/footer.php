@@ -22,7 +22,8 @@
 </footer>
 
 <!-- JavaScript -->
-<script></script>
+<?php require_once('../includes/js_scripts.php'); ?>
+
 
 </body>
 </html>

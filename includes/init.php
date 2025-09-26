@@ -33,3 +33,11 @@
         "culture_holidays" => 'Culture & Holidays',
         "other" => 'Other',
     ];
+
+    $strengths = [
+        0 => 'Untested',
+        1 => 'Weak',
+        2 => 'Medium',
+        3 => 'Strong',
+        4 => 'Mastered',
+    ];

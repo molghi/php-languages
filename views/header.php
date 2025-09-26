@@ -41,6 +41,29 @@
             0% { background-position: 0 0; }
             100% { background-position: 0 16px; } /* move one full pattern height */
             }
+
+            /* WebKit browsers (Chrome, Edge, Safari) */
+            /* WebKit browsers (Chrome, Safari, Edge) */
+            ::-webkit-scrollbar {
+            width: 6px;              /* thin scrollbar */
+            }
+
+            ::-webkit-scrollbar-track {
+            background: #000;        /* black track */
+            }
+
+            ::-webkit-scrollbar-thumb {
+            background-color: #458B41; /* dark green thumb */
+            border-radius: 3px;
+            }
+
+            /* Firefox */
+            * {
+            scrollbar-width: thin;
+            scrollbar-color: #458B41 #000; /* thumb track */
+            }
+
+
     </style>
 </head>
 
@@ -55,15 +78,21 @@
         <div class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between">
             <!-- Logo / Title -->
             <h1 class="text-2xl md:text-3xl font-bold uppercase animate-pulse">
-                <a href="../public/index.php">VOCAB-TRAINER 6525</a>
+                <a href="../public/index.php">VOCAB-TRAINER-6525</a>
             </h1>
             
             <!-- Navigation -->
-            <nav class="flex space-x-6 text-lg">
-            <a href="../public/form.php" class="hover:text-green-200 hover:underline underline-offset-4 <?= $page === 'form' ? 'underline' : '' ?>">Add Word</a>
-            <a href="../public/vocabulary.php" class="hover:text-green-200 hover:underline underline-offset-4 <?= $page === 'vocabulary' ? 'underline' : '' ?>">Vocabulary</a>
+            <nav class="flex space-x-8 text-lg">
+            <a href="../public/form.php" class="hover:text-green-200 hover:underline underline-offset-4 <?= $page === 'form' ? 'underline' : '' ?>">
+                <?= isset($mode) && $mode === 'edit' ? 'Edit Word' : 'Add Word' ?>
+            </a>
+            <a href="../public/vocabulary.php" class="hover:text-green-200 hover:underline underline-offset-4 <?= $page === 'vocabulary' ? 'underline' : '' ?>">
+                Vocabulary
+            </a>
+            <a href="../public/quiz.php" class="hover:text-green-200 hover:underline underline-offset-4 <?= $page === 'quiz' ? 'underline' : '' ?>">
+                Quiz
+            </a>
             <!-- <a href="#" class="hover:text-green-200 hover:underline underline-offset-4">Dashboard</a> -->
-            <!-- <a href="#" class="hover:text-green-200 hover:underline underline-offset-4">Quiz</a> -->
             <!-- <a href="#" class="hover:text-green-200 hover:underline underline-offset-4">Stats</a> -->
             </nav>
         </div>
