@@ -1,6 +1,13 @@
 <div class="max-w-6xl mx-auto pb-[100px] px-3">
 
-    <h2 class="text-[#458B41] text-center font-mono my-6 text-4xl">Your Vocabulary</h2>
+    <h2 class="<?= $big_title_styles ?>">Your Vocabulary</h2>
+
+    <?php if(isset($_SESSION['quiz_msg'])): ?>
+    <div class="my-4 bg-black border border-blue-400 text-blue-400 px-4 py-3 font-mono">
+        <?= $_SESSION['quiz_msg'] ?>
+    </div>
+    <?php unset($_SESSION['quiz_msg']); ?>
+    <?php endif; ?>
 
     <!-- Filter row -->
     <div class="w-full bg-black text-[#458B41] font-mono border-b-2 border-[#458B41] py-3 flex items-center gap-4 mt-4 pb-8">
@@ -73,29 +80,37 @@
                             <span><?= $entry['translation'] ?></span>
                         </div>
                         <!-- LANG & CAT -->
-                        <div class="flex gap-8 mt-2 text-sm">
-                            <div>
+                        <div class="flex gap-10 mt-2 text-sm">
+                            <div class="min-w-[196px]">
                                 <span class="text-[#458B41]">Language:</span> 
                                 <span class="entry-lang"><?= $languages[$entry['language']] ?></span>
                             </div>
 
-                            <div>
+                            <div class="min-w-[279px]">
                                 <span class="text-[#458B41]">Category:</span> 
                                 <span><?= $categories[$entry['category']] ?></span>
                             </div>
 
-                            <div>
+                            <div class="min-w-[152px]">
                                 <span class="text-[#458B41]">Strength:</span> 
                                 <?php
                                     if ($entry['strength'] === 0) $color = 'text-[white]';
                                     if ($entry['strength'] === 1) $color = 'text-red-400';
                                     if ($entry['strength'] === 2) $color = 'text-yellow-400';
-                                    if ($entry['strength'] === 3) $color = 'text-green-400';
+                                    // if ($entry['strength'] === 3) $color = 'text-green-400';
+                                    if ($entry['strength'] === 3) $color = 'text-[limegreen]';
                                     if ($entry['strength'] === 4) $color = 'text-blue-400';
                                 ?>
                                 <span class="<?= $color; ?>"
                                 ><?= $strengths[$entry['strength']] ?></span>
                             </div>
+
+                            <?php if($entry['next_revision']): ?>
+                            <div>
+                                <span class="text-[#458B41]">Next Review:</span> 
+                                <span><?= get_time_interval($entry['next_revision']) ?></span>
+                            </div>
+                            <?php endif; ?>
                         </div>
                         <!-- EXAMPLE -->
                         <?php if ($entry['example']): ?>
@@ -115,10 +130,10 @@
                     <div>
                         <!-- Action buttons -->
                         <div class="flex gap-4">
-                        <button class="flex items-center gap-1 bg-black border border-green-400 text-green-400 px-2 py-1 text-sm uppercase opacity-50 hover:opacity-100 active:opacity-70 edit-entry">
+                        <button class="flex items-center gap-1 bg-black border border-green-400 text-green-400 px-2 py-1 text-sm uppercase opacity-30 hover:opacity-100 active:opacity-70 edit-entry">
                             <i class="fas fa-edit"></i> Edit
                         </button>
-                        <button class="flex items-center gap-1 bg-black border border-red-500 text-red-500 px-2 py-1 text-sm uppercase opacity-50 hover:opacity-100 active:opacity-70 delete-entry">
+                        <button class="flex items-center gap-1 bg-black border border-red-500 text-red-500 px-2 py-1 text-sm uppercase opacity-30 hover:opacity-100 active:opacity-70 delete-entry">
                             <i class="fas fa-trash-alt"></i> Delete
                         </button>
                         </div>

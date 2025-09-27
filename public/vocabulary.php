@@ -8,8 +8,6 @@
 
     require_once('../includes/Database.php');
     $db = new Database;
-
-    $user_id = 1;
     
     $is_filter_on = isset($_SESSION['filter']) ? true : false;
     if ($is_filter_on) {
@@ -20,7 +18,17 @@
         $user_words = $db->get_user_words($user_id);
     }
 
-
+    function get_time_interval ($timestamp) {
+        date_default_timezone_set('Etc/GMT-4');
+        $now = time();
+        $then = strtotime($timestamp);
+        $diff = floor(($then - $now)/60/60); // in hrs
+        if ($diff > 23) {
+            $diff = floor($diff / 24); // in days
+            $diff = '~' . $diff . ' days';
+        } else $diff = '~' . $diff . ' hrs';
+        return $diff;
+    }
 ?>
 
 

@@ -35,11 +35,14 @@
         </div>
     </form>
 
-    <!-- output error -->
-     <?php if (isset($_REQUEST['error']) && $_REQUEST['error'] === 'nowords'): ?>
-        <div class="max-w-md mx-auto bg-black border border-red-700 text-red-700 px-4 py-3 mt-6 font-mono" role="alert">
-            <strong class="font-bold">Error: </strong>
-            <span class="block sm:inline">You have not added any words in this language or category.</span>
+    <!-- output errors/msgs -->
+     <?php if (isset($_SESSION['quiz_msg'])): ?>
+        <div class="max-w-md mx-auto bg-black border border-[coral] text-[coral] px-4 py-3 mt-6 font-mono" role="alert">
+            <strong class="font-bold">Message: </strong>
+            <span class="block sm:inline">
+                You have not added any words in this language (<span class="opacity-60"><?= ucwords($_SESSION['quiz_msg'][0]) ?></span>) or category (<span class="opacity-60"><?= $_SESSION['quiz_msg'][1] === 'all' ? 'All' : $categories[$_SESSION['quiz_msg'][1]] ?></span>), <b><u>OR</u></b> their next review is not yet due.<br>> Add more words to practice now.
+            </span>
+            <?php unset($_SESSION['quiz_msg']); ?>
         </div>
      <?php endif; ?>
 </div>

@@ -29,7 +29,7 @@
 
 
 <!-- IMPORT MAIN PAGE CONTENT -->
-<h2 class="text-center my-8 text-5xl text-[#458B41] font-mono">
+<h2 class="<?= $big_title_styles ?>">
     Quiz
     <!-- output lang flag: -->
     <?= isset($_SESSION['quiz_set']) && isset($_REQUEST['lang']) ? explode(' ', $languages[$_REQUEST['lang']])[0] : '' ?>

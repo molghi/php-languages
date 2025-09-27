@@ -170,7 +170,9 @@
     
                 header("Location: $this->quiz_page" . "?lang=$lang&cat=$cat&round=$round");
             } else {
-                header("Location: $this->quiz_page" . "?error=nowords");
+                $_SESSION['quiz_msg'] = [$lang, $cat];
+                // header("Location: $this->quiz_page" . "?error=nowords");
+                header("Location: $this->quiz_page");
             }
 
         }
@@ -222,8 +224,18 @@
                 array_push($word_ids, (int) $i['id']);
             }
 
+            $next_revision_dates = [];
+            date_default_timezone_set('Etc/GMT-4');
+            foreach($strengths as $key => $val) {
+                if ($val === 1) $revision_date = date("Y-m-d H:i:s", strtotime('+25 minutes'));  // weak
+                if ($val === 2) $revision_date = date("Y-m-d H:i:s", strtotime('+6 hours'));     // medium
+                if ($val === 3) $revision_date = date("Y-m-d H:i:s", strtotime('+3 days'));      // strong
+                if ($val === 4) $revision_date = date("Y-m-d H:i:s", strtotime('+10 days'));     // mastered
+                $next_revision_dates[$word_ids[$key]] = $revision_date;
+            }
+
             // run query to upd strength of each word
-            $db->update_words_strength($user_id, $strengths, $word_ids);
+            $db->update_words_strength($user_id, $strengths, $word_ids, $next_revision_dates);
 
             // unset sesh vars
             unset($_SESSION['quiz_set']);
@@ -231,6 +243,7 @@
             unset($_SESSION['quiz_round']);
             unset($_SESSION['quiz_answers']);
 
+            $_SESSION['quiz_msg'] = "<strong>Message:</strong> Your quiz results have been registered!";
             header("Location: $this->vocab_page");
         }
 

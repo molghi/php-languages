@@ -8,14 +8,14 @@
 
     require_once('../controllers/WordController.php'); // for Add/Edit Word form
     require_once('../controllers/FilterController.php'); // for Vocabulary Filter
+    require_once('../controllers/AuthController.php');
     require_once('../includes/Validator.php');
     require_once('../includes/Database.php');
     $word = new WordController;
     $val = new Validator;
     $db = new Database;
     $filter = new FilterController;
-
-    $user_id = 1;
+    $auth = new AuthController; 
 
     switch ($action) {
         case 'addword':
@@ -42,6 +42,9 @@
             break;
         case 'registerquiz':
             $word->register_quiz($user_id);
+            break;
+        case 'logout':
+            $auth->logout();
             break;
         default:
             break;

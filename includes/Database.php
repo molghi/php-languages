@@ -132,7 +132,7 @@
         // ================================================================================================
 
         public function fetch_word_set ($user_id, $lang, $cat) {
-            $sql = 'SELECT * FROM words WHERE user_id = :user_id'; 
+            $sql = "SELECT * FROM words WHERE user_id = :user_id AND (next_revision <= NOW() OR next_revision IS NULL) "; 
 
             if ($lang !== 'all') {
                 $sql .= ' AND language = :language';
@@ -154,7 +154,7 @@
 
         // ================================================================================================
 
-        public function update_words_strength ($user_id, $strengths, $word_ids) {
+        public function update_words_strength ($user_id, $strengths, $word_ids, $next_revision_dates) {
             $sql = 'UPDATE words SET strength = CASE id ';
 
             $ids = '';
@@ -165,8 +165,13 @@
             }
 
             $ids = rtrim($ids, ', '); // slicing off the last ', '
+
+            $sql .= ' END, next_revision = CASE id ';
+            foreach($next_revision_dates as $id => $nrd) {
+                $sql .= " WHEN $id THEN '$nrd' "; // SQL TIMESTAMP/DATETIME literals must be wrapped in single quotes
+            }
             
-            $sql .= "END WHERE user_id = ? AND id IN ($ids)";
+            $sql .= " END WHERE user_id = ? AND id IN ($ids)";
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$user_id]);

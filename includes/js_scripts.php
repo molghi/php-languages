@@ -32,4 +32,72 @@
 
     // =========================================================================================================
 
+    function toggleRegBtn () {
+        const numOfRounds = document.querySelectorAll('.entry').length;
+        const numOfCheckedInputs = document.querySelectorAll('input[type="radio"]:checked').length;
+        if (numOfCheckedInputs < numOfRounds) {
+            document.querySelector('.btn-reg-results').disabled = true;
+            document.querySelector('.btn-reg-results').classList.add('opacity-50', 'cursor-not-allowed');
+            if (document.querySelector('.reg-msg')) document.querySelector('.reg-msg').remove();
+            document.querySelector('.btn-reg-results').insertAdjacentHTML('afterend', '<span class="reg-msg font-mono text-green-500 ml-6">Test your knowledge on each question to register your results.</span>')
+        } else {
+            document.querySelector('.btn-reg-results').disabled = false;
+            document.querySelector('.btn-reg-results').classList.remove('opacity-50', 'cursor-not-allowed');
+            if (document.querySelector('.reg-msg')) document.querySelector('.reg-msg').remove();
+        }
+    }
+
+    if (document.querySelector('.btn-reg-results')) {
+        toggleRegBtn();
+
+        document.querySelector('.entries').addEventListener('click', function(e) {
+            if (!e.target.closest('.peer')) return;
+            toggleRegBtn();
+        })
+    }
+
+    // =========================================================================================================
+
+    if (document.querySelector('.btn-log-out')) {
+        document.querySelector('.btn-log-out').addEventListener('click', function(e) {
+            const answer = confirm('Are you sure you want to log out?');
+            if (!answer) return;
+            submitPostForm(`../public/index.php?action=logout`);
+        })
+    }
+
+    // =========================================================================================================
+
+    if (document.querySelector('.auth')) {
+        const loginTab = document.getElementById('loginTab');
+        const signupTab = document.getElementById('signupTab');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+
+        loginTab.addEventListener('click', () => {
+            // Show login form, hide signup
+            loginForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+
+            // Update tab styles
+            loginTab.classList.add('bg-green-900', 'text-green-200');
+            loginTab.classList.remove('bg-black', 'hover:bg-green-900');
+            signupTab.classList.add('bg-black', 'hover:bg-green-900');
+            signupTab.classList.remove('bg-green-900', 'text-green-200');
+        });
+
+        signupTab.addEventListener('click', () => {
+            // Show signup form, hide login
+            signupForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+
+            // Update tab styles
+            signupTab.classList.add('bg-green-900', 'text-green-200');
+            signupTab.classList.remove('bg-black', 'hover:bg-green-900');
+            loginTab.classList.add('bg-black', 'hover:bg-green-900');
+            loginTab.classList.remove('bg-green-900', 'text-green-200');
+        });
+
+    }
+
 </script>

@@ -1,4 +1,4 @@
-<div class="max-w-xl mx-auto mt-12 p-6 bg-black border-2 border-[#458B41] rounded-xl shadow-lg font-mono text-[#458B41] relative mb-10">
+<div class="max-w-xl mx-auto mt-10 p-6 bg-black border-2 border-[#458B41] rounded-xl shadow-lg font-mono text-[#458B41] relative mb-10">
   <h2 class="text-2xl font-bold mb-6 uppercase"><?= $mode === 'add' ? 'Add New ' : 'Edit '; ?> Word</h2>
   
   <form method="POST" action="<?= $mode === 'add' ? '../public/index.php?action=addword' : '../public/index.php?action=editword&wordid=' . $word_to_edit['id'] ?>" class="space-y-4">

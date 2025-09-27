@@ -2,6 +2,17 @@
 
     session_start();
 
+    $accessed_page = $_SERVER['REQUEST_URI'];
+    $is_accessed_page_auth = str_contains($accessed_page, 'auth.php');
+    $is_accessed_page_index = str_contains($accessed_page, 'index.php');
+    $is_user_set = isset($user_id);
+
+    if (!$is_user_set && !$is_accessed_page_auth && !$is_accessed_page_index) {
+            header("Location: ../public/auth.php"); // non-registered users can only visit Auth & Index pages
+            exit();
+    }
+
+
     $languages = [
         "english" => '🇬🇧 English',
         "french" => '🇫🇷 French',
@@ -41,3 +52,5 @@
         3 => 'Strong',
         4 => 'Mastered',
     ];
+
+    $big_title_styles = "text-center my-8 text-5xl text-green-600 font-mono";

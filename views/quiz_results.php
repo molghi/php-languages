@@ -1,7 +1,7 @@
 
     <div class="max-w-4xl mx-auto pb-[100px] px-3">
         <form action="../public/index.php?action=registerquiz" method="POST">
-        <div class="divide-y divide-green-600 border-l-2 border-t-2 border-r-2 border-b-2 border-[#458B41] bg-black text-green-300 font-mono">
+        <div class="divide-y divide-green-600 border-l-2 border-t-2 border-r-2 border-b-2 border-[#458B41] bg-black text-green-300 font-mono entries">
             <?php foreach($_SESSION['quiz_set'] as $key => $round): ?>
                 <div class="p-4 hover:bg-green-950/40 flex justify-between entry" data-word-id="<?= $round['id'] ?>">
                     <div>
@@ -82,6 +82,6 @@
             <?php endforeach; ?>
         </div>
 
-        <button class="inline-block mt-8 bg-black border-2 border-[#458B41] text-green-300 font-mono px-4 py-2 uppercase tracking-wider hover:bg-green-800 hover:text-green-200 active:opacity-70">Register results</button>
+        <button class="inline-block mt-8 bg-black border-2 border-[#458B41] text-green-300 font-mono px-4 py-2 uppercase tracking-wider hover:bg-green-800 hover:text-green-200 active:opacity-70 btn-reg-results">Register results</button>
                         </form>
     </div>
