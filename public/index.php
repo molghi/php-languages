@@ -46,6 +46,12 @@
         case 'logout':
             $auth->logout();
             break;
+        case 'login':
+            $auth->login();
+            break;
+        case 'signup':
+            $auth->signup();
+            break;
         default:
             break;
     }

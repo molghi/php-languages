@@ -8,7 +8,7 @@
             </h1>
             
             <!-- Navigation -->
-            <?php if (isset($user_id) && $user_id > 0):?>
+            <?php if ($user_id):?>
             <nav class="flex space-x-8 text-lg">
                 <a href="../public/form.php" class="hover:text-green-200 hover:underline underline-offset-4 <?= $page === 'form' ? 'underline' : '' ?>">
                     <?= isset($mode) && $mode === 'edit' ? 'Edit Word' : 'Add Word' ?>

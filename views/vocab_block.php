@@ -70,12 +70,12 @@
                 <div class="p-4 hover:bg-green-950/40 flex justify-between entry" data-word-id="<?= $entry['id'] ?>">
                     <div>
                         <!-- WORD -->
-                        <div class="flex gap-4 items-center mb-2">
+                        <div class="flex gap-4 items-center mb-2 entry-word">
                             <span class="font-bold text-[#458B41]">Word/Phrase:</span>
                             <span class="text-xl entry-word"><?= $entry['word'] ?></span>
                         </div>
                         <!-- TRANSLATION -->
-                        <div class="flex gap-4 items-center">
+                        <div class="flex gap-4 items-center entry-translation">
                             <span class="font-bold text-[#458B41]">Translation:</span>
                             <span><?= $entry['translation'] ?></span>
                         </div>
@@ -106,9 +106,10 @@
                             </div>
 
                             <?php if($entry['next_revision']): ?>
-                            <div>
+                            <div class="whitespace-nowrap">
                                 <span class="text-[#458B41]">Next Review:</span> 
-                                <span><?= get_time_interval($entry['next_revision']) ?></span>
+                                <?php $nextRev = get_time_interval($entry['next_revision']); ?>
+                                <span <?= $nextRev === 'Due' ? 'class="text-[coral]"' : '' ?>><?= $nextRev ?></span>
                             </div>
                             <?php endif; ?>
                         </div>
@@ -141,7 +142,7 @@
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <div class="italic p-4">No words to show...</div>
+            <div class="italic p-4">Nothing to show so far... Add your first word now!</div>
         <?php endif; ?>
 
     </div>

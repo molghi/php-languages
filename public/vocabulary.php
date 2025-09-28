@@ -17,18 +17,6 @@
     } else {
         $user_words = $db->get_user_words($user_id);
     }
-
-    function get_time_interval ($timestamp) {
-        date_default_timezone_set('Etc/GMT-4');
-        $now = time();
-        $then = strtotime($timestamp);
-        $diff = floor(($then - $now)/60/60); // in hrs
-        if ($diff > 23) {
-            $diff = floor($diff / 24); // in days
-            $diff = '~' . $diff . ' days';
-        } else $diff = '~' . $diff . ' hrs';
-        return $diff;
-    }
 ?>
 
 

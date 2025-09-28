@@ -10,17 +10,17 @@
     </div>
 
     <!-- Forms -->
-    <form id="loginForm" class="space-y-8 hidden">
-        <input type="email" placeholder="Email" class="w-full bg-black border border-[#458B41] p-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
-        <input type="password" placeholder="Password" class="w-full bg-black border border-[#458B41] p-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+    <form action="../public/index.php?action=login" method="POST" id="loginForm" class="space-y-8 hidden">
+        <input name="email" type="email" placeholder="Email" class="w-full bg-black border border-[#458B41] p-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+        <input name="password" type="password" placeholder="Password" class="w-full bg-black border border-[#458B41] p-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
 
         <button type="submit" class="w-full bg-black border-2 border-[#458B41] py-2 uppercase hover:bg-green-900">Login</button>
     </form>
 
-    <form id="signupForm" class="space-y-8">
-        <input autofocus="true" type="email" placeholder="Email" class="w-full bg-black border border-[#458B41] p-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
-        <input type="password" placeholder="Password" class="w-full bg-black border border-[#458B41] p-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
-        <input type="password" placeholder="Repeat Password" class="w-full bg-black border border-[#458B41] p-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+    <form action="../public/index.php?action=signup" method="POST" id="signupForm" class="space-y-8">
+        <input name="email" autofocus="true" type="email" placeholder="Email" class="w-full bg-black border border-[#458B41] p-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+        <input name="password" type="password" placeholder="Password" class="w-full bg-black border border-[#458B41] p-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
+        <input name="password-repeat" type="password" placeholder="Repeat Password" class="w-full bg-black border border-[#458B41] p-2 focus:outline-none focus:ring-2 focus:ring-green-500" />
 
         <button type="submit" class="w-full bg-black border-2 border-[#458B41] py-2 uppercase hover:bg-green-900">Signup</button>
     </form>

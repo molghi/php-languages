@@ -179,4 +179,192 @@
 
         // ================================================================================================
 
+        // check if username or email already exist in db
+        public function email_exists (string $email): bool {
+            $email = trim($email);
+            $result = false;
+
+            $sql = 'SELECT * FROM users WHERE email = ? LIMIT 1';      // limit to 1 record since I care only about "> 0"
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$email]);
+            
+            $fetched = $stmt->fetch(PDO::FETCH_ASSOC);    // fetch one
+            if ($fetched) { $result = true; }
+
+            return $result;
+        }
+
+        // ================================================================================================
+
+        public function create_user (string $username, string $email, string $password) {
+            $sql = 'INSERT INTO users (username, email, password) VALUES (:username, :email, :password)';
+            $stmt = $this->pdo->prepare($sql);
+
+            if ($username === '') {
+                $username = trim(explode('@', $email)[0]);
+            }
+
+            $stmt->bindParam(":username", $username);
+            $stmt->bindParam(":email", $email);
+            $stmt->bindParam(":password", $password);
+            $stmt->execute();
+
+            return $this->pdo->lastInsertId(); // return the auto-increment ID -- get the newly created user ID
+        }  
+
+        // ================================================================================================
+
+        // check if username or email exists in db
+        public function check_username_email (string $usernameEmail): bool {
+            $sql = 'SELECT * FROM users WHERE username = ? OR email = ? LIMIT 1'; // limit to 1 since I only care if it's more than 0
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$usernameEmail, $usernameEmail]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result ? true : false; // return true if exists in db, false if doesn't
+        }
+
+        // ================================================================================================
+
+        // on login: check if typed pw was correct
+        public function check_password ($username_or_email, $typed_pw): bool {
+            $sql = 'SELECT password FROM users WHERE username = ? OR email = ?';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$username_or_email, $username_or_email]);
+
+            $fetched_pw = $stmt->fetchColumn(); // fetch the password hash directly, the string directly
+
+            $check_result = password_verify($typed_pw, $fetched_pw); // password_verify compares PLAIN pw to STORED HASH and returns boolean
+
+            return $check_result;
+        }
+
+        // ================================================================================================
+
+        // get user id
+        public function get_user_id ($username_or_email) {   
+            $sql = 'SELECT id FROM users WHERE username = ? OR email = ? LIMIT 1';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$username_or_email, $username_or_email]);
+
+            $fetched_id = $stmt->fetchColumn(); // fetch id directly, just the string
+
+            return $fetched_id;
+        }
+
+        // ================================================================================================
+
+        public function get_profile ($user_id) {
+            $sql = 'SELECT username, email FROM users WHERE id = ? LIMIT 1';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$user_id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+        // ================================================================================================
+
+        public function get_words_count ($user_id) {
+            $sql = 'SELECT COUNT(*) FROM words WHERE user_id = ?';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$user_id]);
+            return $stmt->fetchColumn();
+        }
+
+        // ================================================================================================
+
+        public function get_next_review ($user_id) {
+            $sql = 'SELECT next_revision FROM words WHERE user_id = ? ORDER BY next_revision ASC LIMIT 1';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$user_id]);
+            return $stmt->fetchColumn();
+        }
+
+        // ================================================================================================
+
+        public function get_words_count_to_review ($user_id) {
+            $sql = 'SELECT COUNT(*) AS words_to_review, language AS lang FROM words WHERE user_id = ? AND (next_revision <= NOW() OR next_revision IS NULL) GROUP BY language';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$user_id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+        // ================================================================================================
+
+        public function get_lang_count ($user_id) {
+            // $sql = 'SELECT DISTINCT language AS langs, COUNT(DISTINCT language) AS langcount FROM words WHERE user_id = ?'; 
+            $sql = 'SELECT COUNT(*) AS total_words FROM words WHERE user_id = ?'; 
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$user_id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+
+        // ================================================================================================
+
+        public function get_added_langs ($user_id) {
+            $sql = 'SELECT DISTINCT language FROM words WHERE user_id = ?';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$user_id]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        // ================================================================================================
+
+        public function get_words_in_rotation ($user_id) {
+            $sql = 'SELECT COUNT(*) FROM words WHERE user_id = ? AND strength IN (0, 1, 2)';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$user_id]);
+            return $stmt->fetchColumn();
+        }
+
+        // ================================================================================================
+
+        public function get_words_learned ($user_id) {
+            $sql = 'SELECT COUNT(*) FROM words WHERE user_id = ? AND strength IN (3, 4)';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$user_id]);
+            return $stmt->fetchColumn();
+        }
+
+        // ================================================================================================
+
+        public function push_new_session ($user_id) {
+            $sql = 'INSERT INTO sessions (user_id) VALUES (?)';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$user_id]);
+        }
+
+        // ================================================================================================
+
+        public function get_sessions_played_today ($user_id) {
+            $sql = 'SELECT COUNT(*) FROM sessions WHERE user_id = ? AND DATE(played_at) = CURDATE()';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$user_id]);
+            return $stmt->fetchColumn();
+        }
+
+        // ================================================================================================
+
+        public function get_prev_played_day ($user_id) {
+            $sql = 'SELECT * FROM sessions WHERE user_id = ? AND DATE(played_at) < CURDATE() ORDER BY played_at DESC LIMIT 1';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$user_id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+            // returns false if no row is found
+        }
+
+        // ================================================================================================
+
+        public function get_lang_stats ($user_id) {
+            // $sql = 'SELECT COUNT(*) AS total_words, language, strength FROM words WHERE user_id = ? GROUP BY language, strength';   // this works but counts per strength, not per language
+            $sql = 'SELECT COUNT(*) AS total_words, language,
+                    SUM(strength = 0) AS untested,
+                    SUM(strength = 1) AS weak,
+                    SUM(strength = 2) AS medium,
+                    SUM(strength = 3) AS strong,
+                    SUM(strength = 4) AS mastered 
+                FROM words WHERE user_id = ? GROUP BY language ORDER BY total_words DESC';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$user_id]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
     }

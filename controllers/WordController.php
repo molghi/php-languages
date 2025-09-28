@@ -237,6 +237,9 @@
             // run query to upd strength of each word
             $db->update_words_strength($user_id, $strengths, $word_ids, $next_revision_dates);
 
+            // push new session just played
+            $db->push_new_session($user_id);
+
             // unset sesh vars
             unset($_SESSION['quiz_set']);
             unset($_SESSION['quiz_params']);
