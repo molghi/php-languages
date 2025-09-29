@@ -20,6 +20,17 @@
         unset($_SESSION['quiz_answers']);
     }
 
+    require_once('../includes/Database.php');
+    $db = new Database;
+
+    $added_categories = $db->get_added_categories($user_id);
+    $added_categories_clean = [];
+    foreach($added_categories as $i) {  array_push($added_categories_clean, $i['category']);  }
+    sort($added_categories_clean);
+
+    $added_languages = $db->get_added_languages($user_id);
+    $added_languages_clean = [];
+    foreach($added_languages as $i) {  array_push($added_languages_clean, $i['language']);  }
 ?>
 
 

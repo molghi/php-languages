@@ -14,6 +14,12 @@
             // get form data
             $lang = $_POST['language'];
             $cat  = $_POST['category'];
+            // var_dump($cat);
+            echo $lang;
+            echo "<br>";
+            echo "<br>";
+            echo $cat;
+            
 
             // VALIDATION
             // check if not empty
@@ -30,8 +36,18 @@
             }
 
             // check if matches existing cats
-            $permitted_cats = array_keys($categories);
+            $added_categories = $db->get_added_categories($user_id);
+            $added_categories_clean = [];
+            foreach($added_categories as $i) {  array_push($added_categories_clean, $i['category']);  }
+            $permitted_cats = $added_categories_clean;
+            echo "<br>";
+            echo "<br>";
+            print_r($permitted_cats);
             array_push($permitted_cats, 'all');
+            echo "<br>";
+            echo "<br>";
+            echo !in_array($cat, $permitted_cats) ? 'true' : 'false';
+            // exit;
             if (!in_array($cat, $permitted_cats)) {
                 $this->redirect_with_error($this->error_code, 'Category not found!', $this->vocab_page);
             }

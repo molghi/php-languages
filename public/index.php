@@ -19,7 +19,7 @@
 
     switch ($action) {
         case 'addword':
-            $word->add_word();
+            $word->add_word($user_id);
             break;
         case 'filter':
             $filter->filter($user_id);
@@ -51,6 +51,10 @@
             break;
         case 'signup':
             $auth->signup();
+            break;
+        case 'getcategories':
+            $input = $_REQUEST['input'];
+            $word->get_categories($user_id, $input);
             break;
         default:
             break;

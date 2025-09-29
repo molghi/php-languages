@@ -9,7 +9,7 @@
 
         // ========================================================================
 
-        public function add_word () {
+        public function add_word ($user_id) {
             global $val; // validator class instance
             global $db;   // database class instance
 
@@ -17,7 +17,7 @@
             $word = trim($_POST['word']);
             $translation = trim($_POST['translation']);
             $language = trim($_POST['language']);
-            $category = trim($_POST['category']);
+            $category = str_replace(' ', '_', strtolower(trim($_POST['category'])));
             $example = trim($_POST['example']);
             $notes = trim($_POST['notes']);
 
@@ -55,14 +55,14 @@
             }
 
             // add to db
-            $user_id = 1;
             $db->add_word($word, $translation, $language, $category, $example, $notes, $user_id);
             $_SESSION['last_entered_lang'] = $language;
             $_SESSION['last_entered_cat'] = $category;
             unset($_SESSION['form_data']);
 
-            // redirect to vocab page
-            header("Location: $this->vocab_page");
+            // redirect to page
+            $_SESSION['form_msg'] = 'Word / phrase added successfully!';
+            header("Location: $this->form_page");
         }
 
         // ========================================================================
@@ -113,7 +113,8 @@
             $word = trim($_POST['word']);
             $translation = trim($_POST['translation']);
             $language = trim($_POST['language']);
-            $category = trim($_POST['category']);
+            // $category = trim($_POST['category']);
+            $category = str_replace(' ', '_', strtolower(trim($_POST['category'])));
             $example = trim($_POST['example']);
             $notes = trim($_POST['notes']);
 
@@ -248,6 +249,13 @@
 
             $_SESSION['quiz_msg'] = "<strong>Message:</strong> Your quiz results have been registered!";
             header("Location: $this->vocab_page");
+        }
+
+        // ========================================================================
+
+        public function get_categories ($user_id, $input) {
+            global $db;
+            $fetched = $db->get_categories($user_id, $input);
         }
 
         // ========================================================================

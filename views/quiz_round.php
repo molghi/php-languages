@@ -13,7 +13,7 @@
     <span class="text-green-300"><?= $quiz_set[$quiz_round-1]['word'] ?></span>
   </h2>
 
-  <h3 class="text-lg text-[#458B41] tracking-widest">Category: <span class="text-green-500"><?= $categories[$quiz_set[$quiz_round-1]['category']]; ?></span></h3>
+  <h3 class="text-lg text-[#458B41] tracking-widest">Category: <span class="text-green-500"><?= ucwords(str_replace('_', ' ', $quiz_set[$quiz_round-1]['category'])); ?></span></h3>
 
   <?php if ($quiz_set[$quiz_round-1]['example']): ?>
     <h3 class="text-lg text-[#458B41] tracking-widest">Example: <span class="text-green-500"><?= $quiz_set[$quiz_round-1]['example']; ?></span></h3>
@@ -34,3 +34,4 @@
     </button>
   </form>
 </div>
+

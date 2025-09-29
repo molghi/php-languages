@@ -20,15 +20,15 @@
 
     $languages = [
         "english" => '🇬🇧 English',
-        "french" => '🇫🇷 French',
         "spanish" => '🇪🇸 Spanish',
         "chinese" => '🇨🇳 Chinese',
+        "arabic" => '🇸🇦 Arabic',
+        "portuguese" => '🇵🇹 Portuguese',
+        "french" => '🇫🇷 French',
         "german" => '🇩🇪 German',
         "japanese" => '🇯🇵 Japanese',
         "russian" => '🇷🇺 Russian',
-        "arabic" => '🇸🇦 Arabic',
         "italian" => '🇮🇹 Italian',
-        "portuguese" => '🇵🇹 Portuguese',
     ];
     
     $categories = [
@@ -58,7 +58,8 @@
         4 => 'Mastered',
     ];
 
-    $big_title_styles = "text-center my-8 text-5xl text-green-600 font-mono";
+    $big_title_styles = "text-center my-8 text-5xl text-green-600 font-mono px-2 sm:px-0 leading-tight sm:leading-none";
+
 
     function get_time_interval ($timestamp, $flag = 'next_review') {
         date_default_timezone_set('Etc/GMT-4');
@@ -70,14 +71,27 @@
             $diff = floor($diff / 24); // in days
             if ($diff == 1) $diff = '~' . $diff . ' day';  // "1 day"
             else $diff = '~' . $diff . ' days'; // "2+ days"
-        } elseif ($diff < 0 && $flag === 'next_review') {
+        } 
+        
+        elseif ($diff < 0 && $flag === 'next_review') {
             $diff = 'Due';
-        } elseif ($diff < 0 && $flag !== 'next_review') {
-            if ($diff == -1) $diff = '~' . abs($diff) . ' day';  // "1 day"
-            else $diff = '~' . abs($diff) . ' days'; // "2+ days"
+        } 
+        
+        elseif ($diff < 0 && $flag === 'last_played') {   // will be shown in Stats
+            // $diff is in hrs
+            if ($diff == -1) $diff = '~' . abs($diff) . ' hr';
+            elseif($diff < -1 && $diff >= -23) $diff = '~' . abs($diff) . ' hrs';
+            else {
+                $diff = abs(floor($diff / 24)); // in days
+                if ($diff == 1) $diff = '~' . $diff . ' day';  // "1 day"
+                else $diff = '~' . $diff . ' days'; // "2+ days"
+                // $diff = '~' . abs($diff) . ' days';
+            }
         }
+
         else {
             $diff = '~' . $diff . ' hrs';
         }
+
         return $diff;
     }

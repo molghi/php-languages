@@ -17,10 +17,19 @@
 
     // fetch soonest review
     $next_review = $db->get_next_review($user_id);
-    $next_review_in = get_time_interval($next_review);
+    if ($next_review) $next_review_in = get_time_interval($next_review, 'next_review');
+    elseif ($next_review === null) $next_review_in = 'Now'; // if it's null, then some word was added and never tested
+    elseif ($next_review === false) $next_review_in = '_'; // if it's false, then db returned no rows
 
     // fetch num of words to review now
     $words_count_to_review = $db->get_words_count_to_review($user_id);
+    $words_count_to_review_num = 0;
+    $words_count_to_review_langs = '';
+    foreach($words_count_to_review as $i) { 
+        $words_count_to_review_num += (int) $i['words_to_review']; 
+        $words_count_to_review_langs .= ucwords($i['lang']) . ', ';
+    }
+    $words_count_to_review_langs = rtrim($words_count_to_review_langs, ', ');
 
     // fetch num of langs added
     $lang_count = $db->get_added_langs($user_id);
@@ -42,9 +51,13 @@
 
     // fetch for each lang: total words in this lang, num of words of each strength
     $lang_stats = $db->get_lang_stats($user_id);
-    // echo '<pre style="color:green;">';
-    // print_r($lang_stats);
-    // echo '</pre>';
+
+    // get all categories that a user has added
+    $added_categories = $db->get_added_categories($user_id);
+    $added_categories_clean = [];
+    foreach($added_categories as $i) {  array_push($added_categories_clean, ucwords(str_replace('_', ' ', $i['category'])));  }
+    sort($added_categories_clean);
+    $added_categories_joined = implode(', ', $added_categories_clean);
 ?>
 
 

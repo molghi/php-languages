@@ -10,38 +10,42 @@
     <?php endif; ?>
 
     <!-- Filter row -->
-    <div class="w-full bg-black text-[#458B41] font-mono border-b-2 border-[#458B41] py-3 flex items-center gap-4 mt-4 pb-8">
-        <form action="../public/index.php?action=filter" method="POST" class="flex items-center gap-4">
-            <label for="lang" class="uppercase text-md">Language:</label>
-            <select name="language" id="lang" class="bg-black text-[#458B41] border border-[#458B41] px-2 py-1 focus:outline-none">
-                <option value="all">All</option>
-                <?php foreach($languages as $key => $val): ?>
-                    <option value="<?= $key ?>"
-                        <?= $is_filter_on && $lang === $key ? 'selected' : '' ?>
-                    >
-                        <?= $val ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+    <div class="w-full bg-black text-[#458B41] font-mono border-b-2 border-[#458B41] py-3 flex items-center gap-4 mt-4 pb-8 flex-wrap lg:flex-nowrap">
+        <form action="../public/index.php?action=filter" method="POST" class="flex items-center gap-4 flex-wrap lg:flex-nowrap">
+            <div class="w-full sm:w-auto">
+                <label for="lang" class="uppercase text-md inline-block mb-2 sm:mb-0">Language:</label>
+                <select name="language" id="lang" class="bg-black text-[#458B41] border border-[#458B41] px-2 py-1 focus:outline-none w-full sm:w-auto">
+                    <option value="all">All</option>
+                    <?php foreach($added_languages_clean as $key => $val): ?>
+                        <option value="<?= $val ?>"
+                            <?= $is_filter_on && $lang === $val ? 'selected' : '' ?>
+                        >
+                            <?= $languages[$val] ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-            <label for="cat" class="uppercase text-md ml-4">Category:</label>
-            <select name="category" id="cat" class="bg-black text-[#458B41] border border-[#458B41] px-2 py-1 focus:outline-none">
-                <option value="all">All</option>
-                <?php foreach($categories as $key => $val): ?>
-                    <option value="<?= $key ?>"
-                        <?= $is_filter_on && $cat === $key ? 'selected' : '' ?>
-                    >
-                        <?= $val ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+            <div class="w-full sm:w-auto">
+                <label for="cat" class="uppercase text-md lg:ml-4 inline-block mb-2 sm:mb-0">Category:</label>
+                <select name="category" id="cat" class="bg-black text-[#458B41] border border-[#458B41] px-2 py-1 focus:outline-none w-full sm:w-auto">
+                    <option value="all">All</option>
+                    <?php foreach($added_categories_clean as $key => $val): ?>
+                        <option value="<?= $val ?>"
+                            <?= $is_filter_on && $cat === $val ? 'selected' : '' ?>
+                        >
+                            <?= ucwords(str_replace('_', ' ', $val)) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-            <button type="submit" class="ml-5 bg-green-500 text-black px-3 py-1 font-bold uppercase tracking-wider hover:bg-[#458B41] active:opacity-70">
+            <button type="submit" class="lg:ml-5 bg-green-500 text-black px-3 py-1 font-bold uppercase tracking-wider hover:bg-[#458B41] active:opacity-70">
                 Filter
             </button>
         </form>
 
-        <div class="ml-auto">Entries: <?= $user_words && count($user_words) > 0 ? count($user_words) : 0 ?></div>
+        <div class="md:ml-auto">Entries: <?= $user_words && count($user_words) > 0 ? count($user_words) : 0 ?></div>
     </div>
 
 
@@ -67,12 +71,11 @@
     <!-- Entries -->
         <?php if ($user_words && count($user_words) > 0): ?>
             <?php foreach($user_words as $entry): ?>
-                <div class="p-4 hover:bg-green-950/40 flex justify-between entry" data-word-id="<?= $entry['id'] ?>">
+                <div class="p-4 hover:bg-green-950/40 flex justify-between entry flex-wrap xl:flex-nowrap gap-y-4 xl:gap-y-0" data-word-id="<?= $entry['id'] ?>">
                     <div>
                         <!-- WORD -->
                         <div class="flex gap-4 items-center mb-2 entry-word">
-                            <span class="font-bold text-[#458B41]">Word/Phrase:</span>
-                            <span class="text-xl entry-word"><?= $entry['word'] ?></span>
+                            <span class="font-bold text-[#458B41]">Word/Phrase:</span> <span class="text-xl entry-word"><?= $entry['word'] ?></span>
                         </div>
                         <!-- TRANSLATION -->
                         <div class="flex gap-4 items-center entry-translation">
@@ -80,7 +83,7 @@
                             <span><?= $entry['translation'] ?></span>
                         </div>
                         <!-- LANG & CAT -->
-                        <div class="flex gap-10 mt-2 text-sm">
+                        <div class="flex gap-x-10 gap-y-2 mt-2 text-sm flex-wrap lg:flex-nowrap">
                             <div class="min-w-[196px]">
                                 <span class="text-[#458B41]">Language:</span> 
                                 <span class="entry-lang"><?= $languages[$entry['language']] ?></span>
@@ -88,7 +91,7 @@
 
                             <div class="min-w-[279px]">
                                 <span class="text-[#458B41]">Category:</span> 
-                                <span><?= $categories[$entry['category']] ?></span>
+                                <span><?= ucwords(str_replace('_', ' ', $entry['category'])) ?></span>
                             </div>
 
                             <div class="min-w-[152px]">
@@ -106,7 +109,7 @@
                             </div>
 
                             <?php if($entry['next_revision']): ?>
-                            <div class="whitespace-nowrap">
+                            <div class="whitespace-normal lg:whitespace-nowrap">
                                 <span class="text-[#458B41]">Next Review:</span> 
                                 <?php $nextRev = get_time_interval($entry['next_revision']); ?>
                                 <span <?= $nextRev === 'Due' ? 'class="text-[coral]"' : '' ?>><?= $nextRev ?></span>
@@ -142,7 +145,7 @@
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <div class="italic p-4">Nothing to show so far... Add your first word now!</div>
+            <div class="italic p-4">Nothing to show...</div>
         <?php endif; ?>
 
     </div>

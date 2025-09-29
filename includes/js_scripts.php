@@ -15,9 +15,10 @@
             const closestEntry = e.target.closest('.entry');
             if (e.target.closest('.delete-entry')) {
                 // delete word
-                const word = closestEntry.querySelector('.entry-word').textContent;
-                const lang = closestEntry.querySelector('.entry-lang').textContent;
-                const answer = confirm(`Are you sure you want to delete this entry?\n\nWord: ${word}\nLang: ${lang}\n\nThis action cannot be undone.`);
+                const word = closestEntry.querySelector('.entry-word').textContent.trim();
+                console.log(word)
+                const lang = closestEntry.querySelector('.entry-lang').textContent.trim();
+                const answer = confirm(`Are you sure you want to delete this entry?\n\n${word}\nLanguage: ${lang}\n\nThis action cannot be undone.`);
                 if (!answer) return;
                 const wordId = closestEntry.dataset.wordId;
                 console.log(`delete ${wordId}`);
@@ -98,6 +99,49 @@
             loginTab.classList.remove('bg-green-900', 'text-green-200');
         });
 
+    }
+
+    // =========================================================================================================
+
+    async function getCategories (value) {
+        let res = await fetch(`../public/index.php?action=getcategories&input=${value}`);
+        res = await res.json();
+        return res;
+    }
+
+    function fillCategoryField () {
+        if (document.querySelector('.fetched-categories')) {
+            document.querySelector('.fetched-categories').addEventListener('click', function (e) {
+                if (!e.target.closest('.fetched-category')) return;
+                const categoryText = e.target.closest('.fetched-category').textContent;
+                document.querySelector('input[name="category"]').value = categoryText;
+                document.querySelector('input[name="category"]').focus();
+            })
+        }
+    }
+
+    function renderCategories (fetchedResult) {
+        if (document.querySelector('.fetched-categories')) document.querySelector('.fetched-categories').remove();
+        if (fetchedResult.length === 0) return;
+        const categories = fetchedResult.map(x => '<li class="whitespace-nowrap underline fetched-category cursor-pointer hover:no-underline active:opacity-80 mb-1">' + x.category.replaceAll('_', ' ') + '</li>').join();
+        document.querySelector('.category-block').insertAdjacentHTML('beforeend', `<div class="absolute top-[5px] left-[120%] fetched-categories">
+        <div class="whitespace-nowrap text-[coral] mb-1">Added before:</div>
+        <ul class="list-disc pl-5">
+            ${categories}
+        </ul>
+        </div>`)
+    }
+
+    if (document.querySelector('input[name="category"]')) {
+        const catInput = document.querySelector('input[name="category"]');
+        catInput.addEventListener('input', async function(e) {
+            const inputValue = e.target.value.trim();
+            if (inputValue.length > 1) {
+                const fetchedResult = await getCategories(inputValue);
+                renderCategories(fetchedResult);
+            }
+            fillCategoryField();
+        })
     }
 
 </script>

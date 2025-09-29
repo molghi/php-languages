@@ -281,10 +281,13 @@
         // ================================================================================================
 
         public function get_words_count_to_review ($user_id) {
-            $sql = 'SELECT COUNT(*) AS words_to_review, language AS lang FROM words WHERE user_id = ? AND (next_revision <= NOW() OR next_revision IS NULL) GROUP BY language';
+            $sql = 'SELECT COUNT(*) AS words_to_review, language AS lang
+                    FROM words
+                    WHERE user_id = ? AND (next_revision <= NOW() OR next_revision IS NULL)
+                    GROUP BY language';
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$user_id]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         // ================================================================================================
@@ -366,5 +369,43 @@
             $stmt->execute([$user_id]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
+
+        // ================================================================================================
+
+        // get all categories that match against $value
+        public function get_categories ($user_id, $value) {
+            $value = trim($value);
+
+            $sql = "SELECT DISTINCT category FROM words WHERE user_id = :user_id AND category LIKE :value";
+            
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(":user_id", $user_id);
+            $like_value = "%$value%";  // because cannot use a bound parameter inside quotes with wildcards like '%:value%'
+            $stmt->bindParam(":value", $like_value);
+            $stmt->execute();
+            // return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            header('Content-Type: application/json');
+            echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));   // if i do ajax req, i must echo it out
+            exit();
+        }
+
+        // ================================================================================================
+
+        // get all categories that a user has added
+        public function get_added_categories ($user_id) {
+            $sql = 'SELECT DISTINCT category FROM words WHERE user_id = ?';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$user_id]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        // ================================================================================================
+
+        public function get_added_languages ($user_id) {
+            $sql = 'SELECT DISTINCT language FROM words WHERE user_id = ?';
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$user_id]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }   
 
     }

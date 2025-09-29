@@ -23,7 +23,7 @@
                         <!-- LANG & CAT -->
                         <div class="flex gap-6 mt-2 text-sm">
                             <span><span class="text-[#458B41]">Language:</span> <span class="entry-lang"><?= $languages[$round['language']] ?></span></span>
-                            <span><span class="text-[#458B41]">Category:</span> <?= $categories[$round['category']] ?></span>
+                            <span><span class="text-[#458B41]">Category:</span> <?= ucwords(str_replace('_', ' ', $round['category'])) ?></span>
                         </div>
                         <!-- EXAMPLE -->
                         <?php if ($round['example']): ?>

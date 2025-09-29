@@ -8,6 +8,7 @@
 
         public function logout () {
             $_SESSION = []; // clear all session variables
+            unset($_SESSION['user_id']);
             session_destroy();
             header("Location: $this->index_page"); 
             exit();

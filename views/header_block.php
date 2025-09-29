@@ -1,6 +1,6 @@
 <header class="relative overflow-hidden w-full bg-black border-b-2 border-[#458B41] text-[#458B41] font-mono tracking-widest shadow-lg">
          <!-- <header class="relative overflow-hidden w-full bg-black border-b-4 border-green-500 text-green-400 font-mono tracking-widest shadow-lg "> -->
-        <div class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between">
+        <div class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between flex-wrap gap-x-8 gap-y-4">
 
             <!-- Logo / Title -->
             <h1 class="text-2xl md:text-3xl font-bold uppercase animate-pulse">
@@ -9,7 +9,7 @@
             
             <!-- Navigation -->
             <?php if ($user_id):?>
-            <nav class="flex space-x-8 text-lg">
+            <nav class="flex gap-x-8 text-lg flex-wrap">
                 <a href="../public/form.php" class="hover:text-green-200 hover:underline underline-offset-4 <?= $page === 'form' ? 'underline' : '' ?>">
                     <?= isset($mode) && $mode === 'edit' ? 'Edit Word' : 'Add Word' ?>
                 </a>

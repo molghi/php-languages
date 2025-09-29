@@ -3,7 +3,7 @@
 <footer class="relative w-full bg-black border-t-2 border-[#458B41] text-[#458B41] font-mono tracking-widest shadow-inner overflow-hidden">
   <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-center">
     <!-- Left: Project Info -->
-    <p class="text-[14px] uppercase">
+    <p class="text-[10px] sm:text-[14px] uppercase">
       ©  Sep 2025 | Vocabulary Trainer 6525
     </p>
 
